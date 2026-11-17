@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Propietario')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('propietarios')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/propietarios}"><i class="bi bi-arrow-left"></i>Propietarios</a>
+                    <h1 th:text="${propietario.id == null} ? 'Nuevo propietario' : 'Editar propietario'">Nuevo propietario</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/propietarios/guardar}" th:object="${propietario}" method="post" novalidate>
+                    <input type="hidden" th:field="*{id}">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label" for="nombre">Nombre completo</label>
+                            <input class="form-control" type="text" th:field="*{nombre}" th:errorclass="is-invalid" maxlength="100" autofocus>
+                            <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="documento">Documento</label>
+                            <input class="form-control" type="text" inputmode="numeric" th:field="*{documento}" th:errorclass="is-invalid" maxlength="15">
+                            <div class="invalid-feedback" th:errors="*{documento}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="telefono">Teléfono</label>
+                            <input class="form-control" type="tel" inputmode="numeric" th:field="*{telefono}" th:errorclass="is-invalid" maxlength="10">
+                            <div class="invalid-feedback" th:errors="*{telefono}"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label" for="correo">Correo <span class="vc-sub">(opcional)</span></label>
+                            <input class="form-control" type="email" th:field="*{correo}" th:errorclass="is-invalid" maxlength="120">
+                            <div class="invalid-feedback" th:errors="*{correo}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="direccion">Dirección <span class="vc-sub">(opcional)</span></label>
+                            <input class="form-control" type="text" th:field="*{direccion}" th:errorclass="is-invalid" maxlength="150">
+                            <div class="invalid-feedback" th:errors="*{direccion}"></div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/propietarios}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

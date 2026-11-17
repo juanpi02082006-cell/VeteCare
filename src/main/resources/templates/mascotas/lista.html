@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Mascotas')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('mascotas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Mascotas</h1>
+                    <span class="vc-sub" th:text="${#lists.size(mascotas) == 1 ? '1 registrada' : #lists.size(mascotas) + ' registradas'}">0 registradas</span>
+                </div>
+                <a class="btn btn-primary" th:href="${propietarioFiltro != null} ? @{/mascotas/nuevo(propietarioId=${propietarioFiltro.id})} : @{/mascotas/nuevo}">
+                    <i class="bi bi-plus-lg me-1"></i>Nueva mascota</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="vc-toolbar">
+                    <form class="vc-search" th:action="@{/mascotas}" method="get" role="search">
+                        <i class="bi bi-search"></i>
+                        <input class="form-control" type="search" name="q" th:value="${q}" placeholder="Mascota o propietario" aria-label="Buscar mascota">
+                    </form>
+                    <a th:if="${propietarioFiltro != null}" class="vc-chip gold" th:href="@{/mascotas}" title="Quitar filtro">
+                        <span th:text="${propietarioFiltro.nombre}">Propietario</span><i class="bi bi-x-lg"></i>
+                    </a>
+                    <a th:if="${q != null}" class="btn btn-light btn-sm" th:href="@{/mascotas}">Ver todas</a>
+                </div>
+
+                <div class="table-responsive" th:unless="${#lists.isEmpty(mascotas)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Mascota</th><th>Sexo</th><th>Edad</th><th>Peso</th><th>Propietario</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="m : ${mascotas}">
+                            <td>
+                                <div class="fw-semibold" th:text="${m.nombre}">Nombre</div>
+                                <div class="vc-sub" th:text="${m.raza != null} ? |${m.especie.etiqueta} · ${m.raza}| : ${m.especie.etiqueta}">Especie</div>
+                            </td>
+                            <td th:text="${m.sexo.etiqueta}">Sexo</td>
+                            <td th:text="${m.edad ?: '—'}">Edad</td>
+                            <td class="text-nowrap" th:text="${m.peso != null} ? |${m.peso} kg| : '—'">Peso</td>
+                            <td><a th:href="@{/mascotas(propietarioId=${m.propietario.id})}" th:text="${m.propietario.nombre}">Propietario</a></td>
+                            <td>
+                                <div class="vc-actions">
+                                    <a class="vc-icon-btn" th:href="@{/mascotas/{id}/editar(id=${m.id})}" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                    <form th:action="@{/mascotas/{id}/eliminar(id=${m.id})}" method="post" onsubmit="return confirm('¿Eliminar esta mascota?');">
+                                        <button type="submit" class="vc-icon-btn danger" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash3"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(mascotas)}"><i class="bi bi-search"></i>Sin resultados</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

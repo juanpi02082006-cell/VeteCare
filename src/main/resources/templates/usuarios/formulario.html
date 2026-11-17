@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Usuario')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('usuarios')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/usuarios}"><i class="bi bi-arrow-left"></i>Usuarios</a>
+                    <h1 th:text="${usuario.id == null} ? 'Nuevo usuario' : 'Editar usuario'">Nuevo usuario</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" novalidate>
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                        <div th:each="e : ${#fields.globalErrors()}" th:text="${e}">Error</div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="nombre">Nombre</label>
+                            <input class="form-control" type="text" th:field="*{nombre}" th:errorclass="is-invalid" maxlength="100" autofocus>
+                            <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="correo">Correo</label>
+                            <input class="form-control" type="email" th:field="*{correo}" th:errorclass="is-invalid" maxlength="120" autocomplete="off">
+                            <div class="invalid-feedback" th:errors="*{correo}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="password">Contraseña</label>
+                            <!-- Sin th:field para no enviar nunca el hash al navegador -->
+                            <input class="form-control" type="password" id="password" name="password" autocomplete="new-password" minlength="8"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                                   th:placeholder="${usuario.id == null} ? 'Mínimo 8 caracteres' : 'Sin cambios'">
+                            <div class="invalid-feedback" th:errors="*{password}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="rol">Rol</label>
+                            <select class="form-select" th:field="*{rol}" th:errorclass="is-invalid">
+                                <option value="">Selecciona…</option>
+                                <option th:each="r : ${roles}" th:value="${r}" th:text="${r.etiqueta}">Rol</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{rol}"></div>
+                        </div>
+                        <div class="col-12" id="campo-propietario" th:classappend="*{rol?.name() != 'PROPIETARIO'} ? 'd-none'">
+                            <label class="form-label" for="propietario.id">Propietario vinculado</label>
+                            <select class="form-select" th:field="*{propietario.id}" th:classappend="${#fields.hasErrors('propietario')} ? 'is-invalid'">
+                                <option value="">Selecciona…</option>
+                                <option th:each="p : ${propietarios}" th:value="${p.id}" th:text="|${p.nombre} · ${p.documento}|">Propietario</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{propietario}"></div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" th:field="*{activo}">
+                                <label class="form-check-label" th:for="${#ids.prev('activo')}">Cuenta activa</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/usuarios}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+<script>
+    // El propietario vinculado solo aplica a cuentas con rol Propietario
+    const rol = document.getElementById('rol');
+    const campoPropietario = document.getElementById('campo-propietario');
+    rol.addEventListener('change', () => campoPropietario.classList.toggle('d-none', rol.value !== 'PROPIETARIO'));
+</script>
+</body>
+</html>

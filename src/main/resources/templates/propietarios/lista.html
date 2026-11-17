@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Propietarios')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('propietarios')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Propietarios</h1>
+                    <span class="vc-sub" th:text="${#lists.size(propietarios) == 1 ? '1 registrado' : #lists.size(propietarios) + ' registrados'}">0 registrados</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/propietarios/nuevo}"><i class="bi bi-plus-lg me-1"></i>Nuevo propietario</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="vc-toolbar">
+                    <form class="vc-search" th:action="@{/propietarios}" method="get" role="search">
+                        <i class="bi bi-search"></i>
+                        <input class="form-control" type="search" name="q" th:value="${q}" placeholder="Nombre o documento" aria-label="Buscar propietario">
+                    </form>
+                    <a th:if="${q != null}" class="btn btn-light btn-sm" th:href="@{/propietarios}">Ver todos</a>
+                </div>
+
+                <div class="table-responsive" th:unless="${#lists.isEmpty(propietarios)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Propietario</th><th>Documento</th><th>Contacto</th><th>Mascotas</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${propietarios}">
+                            <td>
+                                <div class="fw-semibold" th:text="${p.nombre}">Nombre</div>
+                                <div class="vc-sub" th:text="${p.direccion}">Dirección</div>
+                            </td>
+                            <td th:text="${p.documento}">0</td>
+                            <td>
+                                <div th:text="${p.telefono}">Teléfono</div>
+                                <div class="vc-sub" th:text="${p.correo}">Correo</div>
+                            </td>
+                            <td>
+                                <a class="vc-chip" th:href="@{/mascotas(propietarioId=${p.id})}" title="Ver sus mascotas">
+                                    <svg th:replace="~{fragments :: huella}"></svg>
+                                    <span th:text="${mascotasPorPropietario[p.id] ?: 0}">0</span>
+                                </a>
+                            </td>
+                            <td>
+                                <div class="vc-actions">
+                                    <a class="vc-icon-btn" th:href="@{/mascotas/nuevo(propietarioId=${p.id})}" title="Agregar mascota" aria-label="Agregar mascota"><i class="bi bi-plus-circle"></i></a>
+                                    <a class="vc-icon-btn" th:href="@{/propietarios/{id}/editar(id=${p.id})}" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                    <form th:action="@{/propietarios/{id}/eliminar(id=${p.id})}" method="post" onsubmit="return confirm('¿Eliminar este propietario?');">
+                                        <button type="submit" class="vc-icon-btn danger" title="Eliminar" aria-label="Eliminar"><i class="bi bi-trash3"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(propietarios)}"><i class="bi bi-people"></i>Sin resultados</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

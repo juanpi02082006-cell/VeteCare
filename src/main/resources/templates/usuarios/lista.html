@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Usuarios')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('usuarios')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Usuarios</h1>
+                    <span class="vc-sub" th:text="${#lists.size(usuarios) == 1 ? '1 cuenta' : #lists.size(usuarios) + ' cuentas'}">0 cuentas</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/usuarios/nuevo}"><i class="bi bi-plus-lg me-1"></i>Nuevo usuario</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="table-responsive">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Usuario</th><th>Rol</th><th>Estado</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="u : ${usuarios}" th:classappend="${!u.activo} ? 'text-body-tertiary'">
+                            <td>
+                                <div class="fw-semibold" th:text="${u.nombre}">Nombre</div>
+                                <div class="vc-sub" th:text="${u.correo}">correo</div>
+                            </td>
+                            <td>
+                                <span class="vc-chip" th:text="${u.rol.etiqueta}">Rol</span>
+                                <div class="vc-sub mt-1" th:if="${u.propietario != null}" th:text="${u.propietario.nombre}">Propietario</div>
+                            </td>
+                            <td>
+                                <span th:if="${u.activo}" class="vc-chip ok">Activo</span>
+                                <span th:unless="${u.activo}" class="vc-chip off">Inactivo</span>
+                            </td>
+                            <td>
+                                <div class="vc-actions">
+                                    <a class="vc-icon-btn" th:href="@{/usuarios/{id}/editar(id=${u.id})}" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                    <form th:if="${usuarioActual == null or usuarioActual.id != u.id}" th:action="@{/usuarios/{id}/estado(id=${u.id})}" method="post">
+                                        <button type="submit" class="vc-icon-btn" th:classappend="${u.activo} ? 'danger'"
+                                                th:title="${u.activo} ? 'Desactivar' : 'Activar'" th:aria-label="${u.activo} ? 'Desactivar' : 'Activar'">
+                                            <i class="bi" th:classappend="${u.activo} ? 'bi-person-dash' : 'bi-person-check'"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

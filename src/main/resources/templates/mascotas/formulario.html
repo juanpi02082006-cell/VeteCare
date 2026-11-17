@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Mascota')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('mascotas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/mascotas}"><i class="bi bi-arrow-left"></i>Mascotas</a>
+                    <h1 th:text="${mascota.id == null} ? 'Nueva mascota' : 'Editar mascota'">Nueva mascota</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/mascotas/guardar}" th:object="${mascota}" method="post" novalidate>
+                    <input type="hidden" th:field="*{id}">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="propietario.id">Propietario</label>
+                            <select class="form-select" th:field="*{propietario.id}" th:classappend="${#fields.hasErrors('propietario')} ? 'is-invalid'">
+                                <option value="">Selecciona…</option>
+                                <option th:each="p : ${propietarios}" th:value="${p.id}" th:text="|${p.nombre} · ${p.documento}|">Propietario</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{propietario}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="nombre">Nombre</label>
+                            <input class="form-control" type="text" th:field="*{nombre}" th:errorclass="is-invalid" maxlength="60">
+                            <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="especie">Especie</label>
+                            <select class="form-select" th:field="*{especie}" th:errorclass="is-invalid">
+                                <option value="">Selecciona…</option>
+                                <option th:each="e : ${especies}" th:value="${e}" th:text="${e.etiqueta}">Perro</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{especie}"></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="sexo">Sexo</label>
+                            <select class="form-select" th:field="*{sexo}" th:errorclass="is-invalid">
+                                <option value="">Selecciona…</option>
+                                <option th:each="s : ${sexos}" th:value="${s}" th:text="${s.etiqueta}">Macho</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{sexo}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="raza">Raza <span class="vc-sub">(opcional)</span></label>
+                            <input class="form-control" type="text" th:field="*{raza}" th:errorclass="is-invalid" maxlength="80">
+                            <div class="invalid-feedback" th:errors="*{raza}"></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="fechaNacimiento">Nacimiento</label>
+                            <input class="form-control" type="date" th:field="*{fechaNacimiento}" th:errorclass="is-invalid"
+                                   th:max="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
+                            <div class="invalid-feedback" th:errors="*{fechaNacimiento}"></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="peso">Peso</label>
+                            <div class="input-group has-validation">
+                                <input class="form-control" type="number" step="0.01" min="0.01" max="150" th:field="*{peso}" th:errorclass="is-invalid">
+                                <span class="input-group-text">kg</span>
+                                <div class="invalid-feedback" th:errors="*{peso}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/mascotas}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

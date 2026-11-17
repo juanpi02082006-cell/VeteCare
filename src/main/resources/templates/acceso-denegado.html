@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Acceso denegado')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-card vc-empty">
+                <i class="bi bi-shield-lock"></i>
+                <h1 class="h5 fw-bold text-body mb-3">No tienes acceso a esta sección</h1>
+                <a class="btn btn-primary" th:href="@{/}">Volver al inicio</a>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

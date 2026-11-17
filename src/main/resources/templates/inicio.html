@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Inicio')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('inicio')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-hello">
+                <span class="vc-chip gold" th:text="${usuarioActual?.rol?.etiqueta}" th:if="${usuarioActual != null}">Rol</span>
+                <h1 th:text="|Hola, ${usuarioActual != null ? usuarioActual.nombre : #authentication.name}|">Hola</h1>
+            </div>
+
+            <div class="vc-tiles">
+                <!-- Administrador -->
+                <a sec:authorize="hasRole('ADMIN')" class="vc-tile" th:href="@{/usuarios}">
+                    <span class="vc-tile-icon"><i class="bi bi-person-gear"></i></span>
+                    <div><div class="vc-tile-num" th:text="${totalUsuarios}">0</div><div class="vc-tile-label">Usuarios</div></div>
+                </a>
+
+                <!-- Administrador y recepcionista -->
+                <th:block sec:authorize="hasAnyRole('ADMIN','RECEPCIONISTA')">
+                    <a class="vc-tile" th:href="@{/propietarios}">
+                        <span class="vc-tile-icon"><i class="bi bi-people"></i></span>
+                        <div><div class="vc-tile-num" th:text="${totalPropietarios}">0</div><div class="vc-tile-label">Propietarios</div></div>
+                    </a>
+                    <a class="vc-tile" th:href="@{/mascotas}">
+                        <span class="vc-tile-icon"><svg th:replace="~{fragments :: huella}"></svg></span>
+                        <div><div class="vc-tile-num" th:text="${totalMascotas}">0</div><div class="vc-tile-label">Mascotas</div></div>
+                    </a>
+                </th:block>
+
+                <span sec:authorize="hasRole('ADMIN')" class="vc-tile disabled">
+                    <span class="vc-tile-icon"><i class="bi bi-bar-chart-line"></i></span>
+                    <div><span class="vc-chip off">Sprint 3</span><div class="vc-tile-label mt-2">Tablero SSD</div></div>
+                </span>
+                <span sec:authorize="hasRole('RECEPCIONISTA')" class="vc-tile disabled">
+                    <span class="vc-tile-icon"><i class="bi bi-calendar3"></i></span>
+                    <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Citas</div></div>
+                </span>
+
+                <!-- Veterinario -->
+                <th:block sec:authorize="hasRole('VETERINARIO')">
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-calendar3"></i></span>
+                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Mi agenda</div></div>
+                    </span>
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-clipboard2-pulse"></i></span>
+                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Consultas</div></div>
+                    </span>
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-eyedropper"></i></span>
+                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Vacunas</div></div>
+                    </span>
+                </th:block>
+
+                <!-- Auxiliar de inventario -->
+                <th:block sec:authorize="hasRole('AUXILIAR')">
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-box-seam"></i></span>
+                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Productos</div></div>
+                    </span>
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-arrow-left-right"></i></span>
+                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Movimientos</div></div>
+                    </span>
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-bell"></i></span>
+                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Alertas</div></div>
+                    </span>
+                </th:block>
+
+                <!-- Propietario -->
+                <th:block sec:authorize="hasRole('PROPIETARIO')">
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><svg th:replace="~{fragments :: huella}"></svg></span>
+                        <div><span class="vc-chip off">Sprint 3</span><div class="vc-tile-label mt-2">Mis mascotas</div></div>
+                    </span>
+                    <span class="vc-tile disabled">
+                        <span class="vc-tile-icon"><i class="bi bi-qr-code"></i></span>
+                        <div><span class="vc-chip off">Sprint 3</span><div class="vc-tile-label mt-2">Carnet de vacunas</div></div>
+                    </span>
+                </th:block>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>
