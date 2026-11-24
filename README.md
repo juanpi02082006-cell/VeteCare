@@ -10,6 +10,15 @@ Desde la terminal: `mvnw spring-boot:run` (Windows: `mvnw.cmd spring-boot:run`).
 
 Abrir <http://localhost:8080>.
 
+## En línea
+
+Publicada en Clever Cloud: <https://vetcare-santander.cleverapps.io>
+(app Java + Maven en Montreal, base MySQL DEV vinculada, perfil `clevercloud`).
+
+Variables configuradas en Clever Cloud: `CC_JAVA_VERSION=21`, `CC_MAVEN_BUILD_GOAL=clean package -DskipTests`,
+`CC_JAR_PATH=target/Vetecare-0.0.1-SNAPSHOT.jar`, `SPRING_PROFILES_ACTIVE=clevercloud` y `TZ=America/Bogota`.
+Las credenciales de MySQL las inyecta Clever Cloud (`MYSQL_ADDON_*`). Para publicar cambios: `clever deploy`.
+
 ## Cuentas de demostración
 
 Todas usan la contraseña **`12345`** (datos ficticios).
@@ -38,7 +47,7 @@ DB_PASSWORD=...
 
 ## Pruebas
 
-`mvnw test`: 31 pruebas de los criterios de aceptación de los sprints 1 y 2.
+`mvnw test`: 32 pruebas de los criterios de aceptación de los sprints 1 y 2.
 
 ## Datos de demostración
 

@@ -34,18 +34,25 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
                 citaExcluidaId == null ? -1L : citaExcluidaId);
     }
 
-    /** Citas de un rango de fechas; veterinario y estado son filtros opcionales (null = todos). */
+    /**
+     * Citas de un rango de fechas. Veterinario, estado y texto son filtros opcionales (null = todos);
+     * el texto busca en el nombre de la mascota o del propietario.
+     */
     @Query("""
             select c from Cita c
-              join fetch c.mascota m join fetch m.propietario
+              join fetch c.mascota m join fetch m.propietario p
               join fetch c.veterinario v
             where c.fechaHora >= :desde and c.fechaHora < :hasta
               and (:veterinarioId is null or v.id = :veterinarioId)
               and (:estado is null or c.estado = :estado)
+              and (:texto is null
+                   or lower(m.nombre) like lower(concat('%', :texto, '%'))
+                   or lower(p.nombre) like lower(concat('%', :texto, '%')))
             order by c.fechaHora
             """)
     List<Cita> buscar(@Param("desde") LocalDateTime desde, @Param("hasta") LocalDateTime hasta,
-            @Param("veterinarioId") Long veterinarioId, @Param("estado") EstadoCita estado);
+            @Param("veterinarioId") Long veterinarioId, @Param("estado") EstadoCita estado,
+            @Param("texto") String texto);
 
     long countByFechaHoraBetweenAndEstado(LocalDateTime desde, LocalDateTime hasta, EstadoCita estado);
 

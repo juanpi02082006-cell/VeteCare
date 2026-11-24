@@ -1058,6 +1058,75 @@ a.vc-chip:hover {
     width: auto;
 }
 
+.vc-toolbar .vc-search {
+    flex: 1 1 200px;
+}
+
+/* Solo la primera letra en mayúscula ("Martes 24 de noviembre") */
+.vc-cap {
+    display: inline-block;
+}
+
+.vc-cap::first-letter {
+    text-transform: uppercase;
+}
+
+/* Pestañas de estado con contador */
+.vc-tabs {
+    display: flex;
+    gap: .25rem;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--vc-line);
+    overflow-x: auto;
+}
+
+.vc-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-bottom: -1px;
+    padding: .7rem .6rem;
+    border-bottom: 2px solid transparent;
+    color: var(--vc-muted);
+    font-size: .88rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.vc-tab:hover {
+    color: var(--vc-navy);
+}
+
+.vc-tab.active {
+    border-bottom-color: var(--vc-gold);
+    color: var(--vc-navy);
+}
+
+.vc-tab-count {
+    min-width: 1.4rem;
+    padding: .05rem .4rem;
+    border-radius: 999px;
+    background: #eef1f4;
+    color: #5b6878;
+    font-size: .72rem;
+    text-align: center;
+}
+
+.vc-tab.active .vc-tab-count {
+    background: var(--vc-navy);
+    color: #fff;
+}
+
+/* Encabezado de día en las vistas Semana y Próximas */
+.vc-table .vc-group-row td {
+    padding: .5rem 1rem;
+    background: #f6f9fc;
+    color: var(--vc-navy);
+    font-size: .84rem;
+    font-weight: 700;
+}
+
 /* Agenda del veterinario */
 .vc-agenda-item {
     display: flex;

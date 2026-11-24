@@ -33,7 +33,7 @@ public class AgendaController {
         LocalDate dia = fecha == null ? LocalDate.now() : fecha;
         Usuario veterinario = usuarioRepository.findByCorreo(principal.getName()).orElse(null);
         List<Cita> citas = veterinario == null ? List.of()
-                : citaRepository.buscar(dia.atStartOfDay(), dia.plusDays(1).atStartOfDay(), veterinario.getId(), null);
+                : citaRepository.buscar(dia.atStartOfDay(), dia.plusDays(1).atStartOfDay(), veterinario.getId(), null, null);
         model.addAttribute("citas", citas);
         model.addAttribute("fecha", dia);
         return "agenda";

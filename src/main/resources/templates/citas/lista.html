@@ -10,7 +10,7 @@
             <div class="vc-page-head">
                 <div>
                     <h1>Citas</h1>
-                    <span class="vc-sub text-capitalize" th:text="${#temporals.format(fecha, 'EEEE d ''de'' MMMM ''de'' yyyy')}">fecha</span>
+                    <span class="vc-sub" th:text="${titulo}">Fecha</span>
                 </div>
                 <a class="btn btn-primary" th:href="@{/citas/nueva}"><i class="bi bi-plus-lg me-1"></i>Nueva cita</a>
             </div>
@@ -18,30 +18,66 @@
             <div th:replace="~{fragments :: alertas}"></div>
 
             <div class="vc-card">
+                <!-- Vista, fecha, búsqueda y veterinario -->
                 <form class="vc-toolbar" th:action="@{/citas}" method="get">
-                    <div class="vc-daynav">
-                        <a class="vc-icon-btn" th:href="@{/citas(fecha=${fecha.minusDays(1)},veterinarioId=${veterinarioId},estado=${estadoFiltro})}" title="Día anterior" aria-label="Día anterior"><i class="bi bi-chevron-left"></i></a>
-                        <input class="form-control" type="date" name="fecha" th:value="${fecha}" onchange="this.form.submit()" aria-label="Fecha">
-                        <a class="vc-icon-btn" th:href="@{/citas(fecha=${fecha.plusDays(1)},veterinarioId=${veterinarioId},estado=${estadoFiltro})}" title="Día siguiente" aria-label="Día siguiente"><i class="bi bi-chevron-right"></i></a>
+                    <input type="hidden" name="vista" th:value="${vista}">
+                    <input type="hidden" name="estado" th:value="${estadoFiltro}">
+
+                    <div class="btn-group" role="group" aria-label="Vista">
+                        <a class="btn btn-outline-primary btn-sm" th:classappend="${vista == 'dia'} ? 'active'"
+                           th:href="@{/citas(vista='dia',fecha=${fecha},veterinarioId=${veterinarioId},estado=${estadoFiltro},q=${q})}">Día</a>
+                        <a class="btn btn-outline-primary btn-sm" th:classappend="${vista == 'semana'} ? 'active'"
+                           th:href="@{/citas(vista='semana',fecha=${fecha},veterinarioId=${veterinarioId},estado=${estadoFiltro},q=${q})}">Semana</a>
+                        <a class="btn btn-outline-primary btn-sm" th:classappend="${vista == 'proximas'} ? 'active'"
+                           th:href="@{/citas(vista='proximas',veterinarioId=${veterinarioId},estado=${estadoFiltro},q=${q})}">Próximas</a>
                     </div>
-                    <select class="form-select" name="veterinarioId" onchange="this.form.submit()" aria-label="Veterinario">
+
+                    <div class="vc-daynav" th:if="${vista != 'proximas'}">
+                        <a class="vc-icon-btn" th:href="@{/citas(vista=${vista},fecha=${anterior},veterinarioId=${veterinarioId},estado=${estadoFiltro},q=${q})}"
+                           th:title="${vista == 'semana'} ? 'Semana anterior' : 'Día anterior'" aria-label="Anterior"><i class="bi bi-chevron-left"></i></a>
+                        <input class="form-control form-control-sm" type="date" name="fecha" th:value="${fecha}" onchange="this.form.submit()" aria-label="Fecha">
+                        <a class="vc-icon-btn" th:href="@{/citas(vista=${vista},fecha=${siguiente},veterinarioId=${veterinarioId},estado=${estadoFiltro},q=${q})}"
+                           th:title="${vista == 'semana'} ? 'Semana siguiente' : 'Día siguiente'" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></a>
+                        <a class="btn btn-light btn-sm" th:href="@{/citas(vista=${vista},veterinarioId=${veterinarioId},estado=${estadoFiltro},q=${q})}">Hoy</a>
+                    </div>
+
+                    <div class="vc-search">
+                        <i class="bi bi-search"></i>
+                        <input class="form-control form-control-sm" type="search" name="q" th:value="${q}" placeholder="Mascota o propietario" aria-label="Buscar">
+                    </div>
+
+                    <select class="form-select form-select-sm" name="veterinarioId" onchange="this.form.submit()" aria-label="Veterinario">
                         <option value="">Todos los veterinarios</option>
                         <option th:each="v : ${veterinarios}" th:value="${v.id}" th:text="${v.nombre}" th:selected="${v.id == veterinarioId}">Veterinario</option>
                     </select>
-                    <select class="form-select" name="estado" onchange="this.form.submit()" aria-label="Estado">
-                        <option value="">Todos los estados</option>
-                        <option th:each="e : ${estados}" th:value="${e}" th:text="${e.etiqueta}" th:selected="${e == estadoFiltro}">Estado</option>
-                    </select>
-                    <a class="btn btn-light btn-sm" th:href="@{/citas}">Hoy</a>
+
+                    <a th:if="${hayFiltros}" class="btn btn-link btn-sm" th:href="@{/citas(vista=${vista},fecha=${fecha})}">
+                        <i class="bi bi-x-lg me-1"></i>Limpiar</a>
                 </form>
 
-                <div class="table-responsive" th:unless="${#lists.isEmpty(citas)}">
+                <!-- Estados con su contador -->
+                <nav class="vc-tabs" aria-label="Estado">
+                    <a class="vc-tab" th:classappend="${estadoFiltro == null} ? 'active'"
+                       th:href="@{/citas(vista=${vista},fecha=${fecha},veterinarioId=${veterinarioId},q=${q})}">
+                        Todas <span class="vc-tab-count" th:text="${total}">0</span></a>
+                    <a class="vc-tab" th:each="e : ${estados}" th:classappend="${e == estadoFiltro} ? 'active'"
+                       th:href="@{/citas(vista=${vista},fecha=${fecha},veterinarioId=${veterinarioId},q=${q},estado=${e})}">
+                        <span th:text="${e.etiqueta + 's'}">Estado</span> <span class="vc-tab-count" th:text="${conteos.get(e)}">0</span></a>
+                </nav>
+
+                <div class="table-responsive" th:unless="${#maps.isEmpty(porDia)}">
                     <table class="table vc-table">
                         <thead>
                         <tr><th>Hora</th><th>Mascota</th><th>Veterinario</th><th>Motivo</th><th>Estado</th><th></th></tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="c : ${citas}" th:classappend="${c.estado.name() == 'CANCELADA'} ? 'text-body-tertiary'">
+                        <tbody th:each="grupo : ${porDia}">
+                        <tr class="vc-group-row" th:if="${vista != 'dia'}">
+                            <td colspan="6">
+                                <span class="vc-cap" th:text="${#temporals.format(grupo.key, 'EEEE d ''de'' MMMM')}">Día</span>
+                                <span class="vc-sub ms-1" th:text="${#lists.size(grupo.value) == 1 ? '1 cita' : #lists.size(grupo.value) + ' citas'}">0 citas</span>
+                            </td>
+                        </tr>
+                        <tr th:each="c : ${grupo.value}" th:classappend="${c.estado.name() == 'CANCELADA'} ? 'text-body-tertiary'">
                             <td class="fw-semibold text-nowrap" th:text="${#temporals.format(c.fechaHora, 'HH:mm')}">09:00</td>
                             <td>
                                 <div class="fw-semibold" th:text="${c.mascota.nombre}">Mascota</div>
@@ -65,7 +101,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="vc-empty" th:if="${#lists.isEmpty(citas)}"><i class="bi bi-calendar3"></i>Sin citas este día</div>
+                <div class="vc-empty" th:if="${#maps.isEmpty(porDia)}">
+                    <i class="bi bi-calendar3"></i>
+                    <span th:text="${hayFiltros} ? 'Sin citas con estos filtros' : 'Sin citas'">Sin citas</span>
+                </div>
             </div>
         </div>
     </main>

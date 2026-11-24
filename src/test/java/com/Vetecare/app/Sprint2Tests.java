@@ -2,6 +2,7 @@ package com.Vetecare.app;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -368,6 +369,24 @@ class Sprint2Tests {
                 "/inventario/movimientos?productoId=" + productoId, "/inventario/movimientos/nuevo?tipo=SALIDA" }) {
             mvc.perform(get(ruta)).andExpect(status().isOk());
         }
+    }
+
+    @Test
+    @WithMockUser(roles = "RECEPCIONISTA")
+    void filtrosDeCitasPorVistaTextoYEstado() throws Exception {
+        for (String vista : new String[] { "dia", "semana", "proximas" }) {
+            mvc.perform(get("/citas").param("vista", vista)).andExpect(status().isOk());
+        }
+        // Búsqueda: solo aparecen las citas de Lola (programada hoy en los datos de prueba)
+        mvc.perform(get("/citas").param("vista", "proximas").param("q", "lola"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString(">Lola<")))
+            .andExpect(content().string(not(containsString(">Max<"))));
+        // Estado: la pestaña de canceladas muestra la cita cancelada de Rocky y no las programadas
+        mvc.perform(get("/citas").param("vista", "proximas").param("estado", "CANCELADA"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString(">Rocky<")))
+            .andExpect(content().string(not(containsString(">Lola<"))));
     }
 
     // ------------------------------------------------------------------ Ayudantes
