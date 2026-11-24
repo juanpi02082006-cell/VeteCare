@@ -12,7 +12,7 @@ Abrir <http://localhost:8080>.
 
 ## Cuentas de demostración
 
-Todas usan la contraseña **`Vetcare2026`** (datos ficticios).
+Todas usan la contraseña **`12345`** (datos ficticios).
 
 | Rol | Correo |
 |---|---|

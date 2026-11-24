@@ -3,6 +3,9 @@ target/
 
 ### Base de datos H2 local ###
 data/
+
+### Enlace local con la app de Clever Cloud ###
+.clever.json
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

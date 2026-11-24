@@ -57,7 +57,7 @@ Sintaxis EARS: *El sistema deberá…* (ubicuo) · *Cuando…* (evento) · *Mien
 | AC-003 | no hay sesión iniciada | se pide `/propietarios` | se redirige a `/login` |
 | AC-004 | hay sesión de recepcionista | se pide `/usuarios` | responde 403 y muestra "No tienes acceso" |
 | AC-005 | hay sesión de recepcionista | abre cualquier pantalla | el menú muestra Propietarios y Mascotas, y no muestra Usuarios |
-| AC-006 | se creó una cuenta con contraseña `Vetcare2026` | se lee la columna `password` | contiene un hash BCrypt (`$2…`) y no el texto plano |
+| AC-006 | se creó una cuenta con contraseña `12345` | se lee la columna `password` | contiene un hash BCrypt (`$2…`) y no el texto plano |
 | AC-010 | existe una cuenta con el correo `x@vetcare.com` | el administrador crea otra con el mismo correo | no se guarda y el campo correo muestra "Ese correo ya está registrado" |
 | AC-011 | el administrador desactivó la cuenta del auxiliar | el auxiliar intenta iniciar sesión | el ingreso es rechazado |
 

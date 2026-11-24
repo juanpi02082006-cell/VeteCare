@@ -41,12 +41,12 @@ import com.Vetecare.app.repository.VacunaRepository;
 /**
  * Datos ficticios de demostración (Ley 1581 de 2012: no se usan datos reales).
  * Cada sprint se carga por separado y solo si sus tablas están vacías.
- * Todas las cuentas de prueba usan la contraseña Vetcare2026.
+ * Todas las cuentas de prueba usan la contraseña 12345.
  */
 @Component
 public class DatosIniciales implements CommandLineRunner {
 
-    public static final String CLAVE_DEMO = "Vetcare2026";
+    public static final String CLAVE_DEMO = "12345";
 
     private final UsuarioRepository usuarioRepository;
     private final PropietarioRepository propietarioRepository;
