@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Consulta')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('consultas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/consultas}"><i class="bi bi-arrow-left"></i>Consultas</a>
+                    <h1 th:text="${consulta.cita.mascota.nombre}">Mascota</h1>
+                    <span class="vc-sub" th:text="|${#temporals.format(consulta.cita.fechaHora, 'dd/MM/yyyy HH:mm')} · ${consulta.cita.veterinario.nombre}|">Fecha</span>
+                </div>
+                <a class="btn btn-light" th:href="@{/consultas/historial/{id}(id=${consulta.cita.mascota.id})}"><i class="bi bi-clock-history me-1"></i>Historial</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-grid-2">
+                <div class="vc-card">
+                    <div class="vc-section-title">Consulta <span class="vc-chip" th:if="${consulta.peso != null}" th:text="|${consulta.peso} kg|">kg</span></div>
+                    <div class="vc-list-item">
+                        <div class="vc-label">Motivo</div>
+                        <div th:text="${consulta.cita.motivo}">Motivo</div>
+                    </div>
+                    <div class="vc-list-item">
+                        <div class="vc-label">Diagnóstico</div>
+                        <div class="vc-text-block" th:text="${consulta.diagnostico}">Diagnóstico</div>
+                    </div>
+                    <div class="vc-list-item">
+                        <div class="vc-label">Tratamiento</div>
+                        <div class="vc-text-block" th:text="${consulta.tratamiento}">Tratamiento</div>
+                    </div>
+                    <div class="vc-list-item" th:if="${consulta.observaciones != null}">
+                        <div class="vc-label">Observaciones</div>
+                        <div class="vc-text-block" th:text="${consulta.observaciones}">Observaciones</div>
+                    </div>
+                </div>
+
+                <div class="vc-card">
+                    <div class="vc-section-title">Productos usados</div>
+                    <div class="vc-list-item d-flex justify-content-between gap-2" th:each="d : ${detalles}">
+                        <span th:text="${d.producto.nombre}">Producto</span>
+                        <span class="fw-semibold text-nowrap" th:text="|× ${d.cantidad}|">× 1</span>
+                    </div>
+                    <div class="vc-empty py-4" th:if="${#lists.isEmpty(detalles)}"><i class="bi bi-capsule"></i>Ninguno</div>
+
+                    <form class="vc-card-body border-top" th:if="${puedeAgregar}" th:action="@{/consultas/{id}/productos(id=${consulta.id})}" method="post">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-12">
+                                <label class="form-label" for="productoId">Producto</label>
+                                <select class="form-select" id="productoId" name="productoId" required>
+                                    <option value="">Selecciona…</option>
+                                    <option th:each="p : ${productos}" th:value="${p.id}" th:text="|${p.nombre} · ${p.stock} disp.|">Producto</option>
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label" for="cantidad">Cantidad</label>
+                                <input class="form-control" type="number" id="cantidad" name="cantidad" min="1" value="1" required>
+                            </div>
+                            <div class="col-7">
+                                <button class="btn btn-primary w-100" type="submit"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Registrar movimiento')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('movimientos')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/inventario/movimientos}"><i class="bi bi-arrow-left"></i>Movimientos</a>
+                    <h1>Registrar movimiento</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/inventario/movimientos/guardar}" th:object="${movimiento}" method="post" novalidate>
+                    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                        <div th:each="e : ${#fields.globalErrors()}" th:text="${e}">Error</div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <span class="form-label d-block">Tipo</span>
+                            <div class="btn-group w-100" role="group" aria-label="Tipo de movimiento">
+                                <th:block th:each="t : ${tipos}">
+                                    <input type="radio" class="btn-check" th:field="*{tipo}" th:value="${t}" autocomplete="off">
+                                    <label class="btn btn-outline-primary" th:for="${#ids.prev('tipo')}">
+                                        <i class="bi me-1" th:classappend="${t.name() == 'ENTRADA'} ? 'bi-box-arrow-in-down' : 'bi-box-arrow-up'"></i><span th:text="${t.etiqueta}">Tipo</span>
+                                    </label>
+                                </th:block>
+                            </div>
+                            <div class="vc-field-error" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label" for="producto.id">Producto</label>
+                            <select class="form-select" th:field="*{producto.id}" th:classappend="${#fields.hasErrors('producto')} ? 'is-invalid'">
+                                <option value="">Selecciona…</option>
+                                <option th:each="p : ${productos}" th:value="${p.id}" th:text="|${p.nombre} · stock ${p.stock}|">Producto</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{producto}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="cantidad">Cantidad</label>
+                            <input class="form-control" type="number" min="1" th:field="*{cantidad}" th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:errors="*{cantidad}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="motivo">Motivo <span class="vc-sub">(opcional)</span></label>
+                            <input class="form-control" type="text" th:field="*{motivo}" th:errorclass="is-invalid" maxlength="200" placeholder="Compra, venta, baja por vencimiento…">
+                            <div class="invalid-feedback" th:errors="*{motivo}"></div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/inventario/movimientos}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

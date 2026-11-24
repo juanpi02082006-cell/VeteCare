@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Registrar vacuna')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('vacunas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/vacunas}"><i class="bi bi-arrow-left"></i>Vacunas</a>
+                    <h1>Registrar vacuna</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/vacunas/guardar}" th:object="${vacuna}" method="post" novalidate>
+                    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                        <div th:each="e : ${#fields.globalErrors()}" th:text="${e}">Error</div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="mascota.id">Mascota</label>
+                            <select class="form-select" th:field="*{mascota.id}" th:classappend="${#fields.hasErrors('mascota')} ? 'is-invalid'">
+                                <option value="">Selecciona…</option>
+                                <option th:each="m : ${mascotas}" th:value="${m.id}" th:text="|${m.nombre} · ${m.especie.etiqueta} · ${m.propietario.nombre}|">Mascota</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{mascota}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="nombre">Vacuna</label>
+                            <input class="form-control" type="text" list="vacunas-comunes" th:field="*{nombre}" th:errorclass="is-invalid" maxlength="80" autocomplete="off">
+                            <datalist id="vacunas-comunes">
+                                <option value="Rabia" data-dias="365"></option>
+                                <option value="Polivalente canina" data-dias="365"></option>
+                                <option value="Parvovirus" data-dias="365"></option>
+                                <option value="Leptospirosis" data-dias="180"></option>
+                                <option value="Bordetella" data-dias="180"></option>
+                                <option value="Triple felina" data-dias="365"></option>
+                                <option value="Leucemia felina" data-dias="365"></option>
+                            </datalist>
+                            <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="fechaAplicacion">Aplicada</label>
+                            <input class="form-control" type="date" th:field="*{fechaAplicacion}" th:errorclass="is-invalid"
+                                   th:max="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
+                            <div class="invalid-feedback" th:errors="*{fechaAplicacion}"></div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="intervaloDias">Intervalo</label>
+                            <div class="input-group has-validation">
+                                <input class="form-control" type="number" min="1" max="1095" th:field="*{intervaloDias}" th:errorclass="is-invalid">
+                                <span class="input-group-text">días</span>
+                                <div class="invalid-feedback" th:errors="*{intervaloDias}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions align-items-center">
+                        <span class="me-auto vc-sub">Refuerzo: <strong class="text-body" id="refuerzo">—</strong></span>
+                        <a class="btn btn-light" th:href="@{/vacunas}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+<script>
+    // Vista previa de la fecha de refuerzo (el cálculo oficial lo hace el servidor: RN-06)
+    const nombre = document.getElementById('nombre');
+    const aplicada = document.getElementById('fechaAplicacion');
+    const intervalo = document.getElementById('intervaloDias');
+    const refuerzo = document.getElementById('refuerzo');
+
+    function actualizarRefuerzo() {
+        const dias = parseInt(intervalo.value, 10);
+        if (!aplicada.value || !dias) { refuerzo.textContent = '—'; return; }
+        const fecha = new Date(aplicada.value + 'T00:00:00');
+        fecha.setDate(fecha.getDate() + dias);
+        refuerzo.textContent = fecha.toLocaleDateString('es-CO');
+    }
+
+    nombre.addEventListener('change', () => {
+        const opcion = document.querySelector(`#vacunas-comunes option[value="${nombre.value}"]`);
+        if (opcion) { intervalo.value = opcion.dataset.dias; actualizarRefuerzo(); }
+    });
+    aplicada.addEventListener('input', actualizarRefuerzo);
+    intervalo.addEventListener('input', actualizarRefuerzo);
+    actualizarRefuerzo();
+</script>
+</body>
+</html>

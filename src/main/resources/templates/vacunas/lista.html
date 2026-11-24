@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Vacunas')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('vacunas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Vacunas</h1>
+                    <span class="vc-sub" th:text="${#lists.size(vacunas) == 1 ? '1 registro' : #lists.size(vacunas) + ' registros'}">0</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/vacunas/nueva}"><i class="bi bi-plus-lg me-1"></i>Registrar vacuna</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="vc-toolbar">
+                    <div class="btn-group" role="group" aria-label="Filtro">
+                        <a class="btn btn-outline-primary btn-sm" th:classappend="${!pendientes} ? 'active'" th:href="@{/vacunas}">Todas</a>
+                        <a class="btn btn-outline-primary btn-sm" th:classappend="${pendientes} ? 'active'" th:href="@{/vacunas(pendientes=true)}">Refuerzos pendientes</a>
+                    </div>
+                </div>
+
+                <div class="table-responsive" th:unless="${#lists.isEmpty(vacunas)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Mascota</th><th>Vacuna</th><th>Aplicada</th><th>Refuerzo</th><th>Estado</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="v : ${vacunas}">
+                            <td>
+                                <div class="fw-semibold" th:text="${v.mascota.nombre}">Mascota</div>
+                                <div class="vc-sub" th:text="${v.mascota.propietario.nombre}">Propietario</div>
+                            </td>
+                            <td th:text="${v.nombre}">Vacuna</td>
+                            <td class="text-nowrap" th:text="${#temporals.format(v.fechaAplicacion, 'dd/MM/yyyy')}">Fecha</td>
+                            <td class="text-nowrap fw-semibold" th:text="${#temporals.format(v.fechaRefuerzo, 'dd/MM/yyyy')}">Fecha</td>
+                            <td>
+                                <!-- Estado del refuerzo; también se usa en el historial -->
+                                <th:block th:fragment="estado(v, reforzadas)">
+                                    <span th:if="${reforzadas.contains(v.id)}" class="vc-chip off">Reforzada</span>
+                                    <th:block th:unless="${reforzadas.contains(v.id)}">
+                                        <span th:if="${v.refuerzoVencido}" class="vc-chip danger">Vencido</span>
+                                        <span th:if="${v.refuerzoProximo}" class="vc-chip warn">Próximo</span>
+                                        <span th:if="${!v.refuerzoVencido and !v.refuerzoProximo}" class="vc-chip ok">Al día</span>
+                                    </th:block>
+                                </th:block>
+                            </td>
+                            <td>
+                                <div class="vc-actions">
+                                    <a class="vc-icon-btn" th:href="@{/consultas/historial/{id}(id=${v.mascota.id})}" title="Historial" aria-label="Historial"><i class="bi bi-clock-history"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(vacunas)}"><i class="bi bi-check2-circle"></i>Sin refuerzos pendientes</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

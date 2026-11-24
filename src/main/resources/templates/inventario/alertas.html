@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Alertas')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('alertas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Alertas</h1>
+                    <span class="vc-sub" th:text="|Vencimientos en los próximos ${diasAviso} días|">Vencimientos</span>
+                </div>
+            </div>
+
+            <div class="vc-alert-grid">
+                <!-- Stock crítico -->
+                <section class="vc-card">
+                    <div class="vc-section-title">
+                        <span class="d-flex align-items-center gap-2"><span class="vc-alert-icon warn"><i class="bi bi-exclamation-triangle"></i></span>Stock crítico</span>
+                        <span class="vc-chip warn" th:text="${#lists.size(criticos)}">0</span>
+                    </div>
+                    <div class="vc-list-item d-flex align-items-center gap-2" th:each="p : ${criticos}">
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold" th:text="${p.nombre}">Producto</div>
+                            <div class="vc-sub" th:text="|Quedan ${p.stock} · mínimo ${p.stockMinimo}|">Stock</div>
+                        </div>
+                        <a class="btn btn-light btn-sm" th:href="@{/inventario/movimientos/nuevo(productoId=${p.id},tipo='ENTRADA')}">Entrada</a>
+                    </div>
+                    <div class="vc-empty py-4" th:if="${#lists.isEmpty(criticos)}"><i class="bi bi-check2-circle"></i>Sin alertas</div>
+                </section>
+
+                <!-- Vencidos -->
+                <section class="vc-card">
+                    <div class="vc-section-title">
+                        <span class="d-flex align-items-center gap-2"><span class="vc-alert-icon danger"><i class="bi bi-x-octagon"></i></span>Vencidos</span>
+                        <span class="vc-chip danger" th:text="${#lists.size(vencidos)}">0</span>
+                    </div>
+                    <div class="vc-list-item d-flex align-items-center gap-2" th:each="p : ${vencidos}">
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold" th:text="${p.nombre}">Producto</div>
+                            <div class="vc-sub" th:text="|Venció el ${#temporals.format(p.fechaVencimiento, 'dd/MM/yyyy')} · ${p.stock} en stock|">Vencimiento</div>
+                        </div>
+                        <a th:if="${p.stock > 0}" class="btn btn-light btn-sm" th:href="@{/inventario/movimientos/nuevo(productoId=${p.id},tipo='SALIDA')}">Dar de baja</a>
+                    </div>
+                    <div class="vc-empty py-4" th:if="${#lists.isEmpty(vencidos)}"><i class="bi bi-check2-circle"></i>Sin alertas</div>
+                </section>
+
+                <!-- Próximos a vencer -->
+                <section class="vc-card">
+                    <div class="vc-section-title">
+                        <span class="d-flex align-items-center gap-2"><span class="vc-alert-icon warn"><i class="bi bi-hourglass-split"></i></span>Por vencer</span>
+                        <span class="vc-chip warn" th:text="${#lists.size(porVencer)}">0</span>
+                    </div>
+                    <div class="vc-list-item" th:each="p : ${porVencer}">
+                        <div class="fw-semibold" th:text="${p.nombre}">Producto</div>
+                        <div class="vc-sub" th:text="|${p.diasParaVencer == 0 ? 'Vence hoy' : (p.diasParaVencer == 1 ? 'Vence mañana' : 'Vence en ' + p.diasParaVencer + ' días')} · ${p.stock} en stock|">Vencimiento</div>
+                    </div>
+                    <div class="vc-empty py-4" th:if="${#lists.isEmpty(porVencer)}"><i class="bi bi-check2-circle"></i>Sin alertas</div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

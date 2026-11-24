@@ -646,3 +646,552 @@ a.vc-chip:hover {
     font-size: 1.35rem;
     font-weight: 700;
 }
+
+.vc-login-card .vc-back {
+    margin-bottom: 1rem;
+}
+
+/* ---------- Landing ---------- */
+.vc-landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    color: #fff;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(201, 162, 39, .16), transparent 38%),
+        radial-gradient(circle at 88% 85%, rgba(47, 111, 174, .42), transparent 45%),
+        var(--vc-navy);
+}
+
+.vc-landing-bar,
+.vc-landing-hero,
+.vc-landing-modules {
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.vc-landing-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.vc-landing-bar .vc-brand {
+    padding: 0;
+}
+
+.btn-gold {
+    --bs-btn-bg: var(--vc-gold);
+    --bs-btn-border-color: var(--vc-gold);
+    --bs-btn-color: var(--vc-navy);
+    --bs-btn-hover-bg: #d8b23a;
+    --bs-btn-hover-border-color: #d8b23a;
+    --bs-btn-hover-color: var(--vc-navy);
+    --bs-btn-active-bg: #b8921f;
+    --bs-btn-active-border-color: #b8921f;
+    --bs-btn-active-color: var(--vc-navy);
+    --bs-btn-focus-shadow-rgb: 201, 162, 39;
+    box-shadow: 0 10px 30px rgba(201, 162, 39, .25);
+}
+
+.btn-gold i {
+    display: inline-block;
+    transition: translate .2s;
+}
+
+.btn-gold:hover i {
+    translate: 4px 0;
+}
+
+.vc-landing-hero {
+    position: relative;
+    flex: 1;
+    display: grid;
+    align-items: center;
+    gap: 2.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+}
+
+@media (min-width: 992px) {
+    .vc-landing-hero {
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        padding-bottom: 4.5rem;
+    }
+}
+
+.vc-landing-copy {
+    position: relative;
+    z-index: 1;
+    animation: vc-sube .7s ease-out both;
+}
+
+.vc-landing-copy h1 {
+    margin-bottom: 2.25rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2.7rem, 7vw, 4.6rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -.02em;
+}
+
+.vc-landing-copy h1 em {
+    display: block;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--vc-gold);
+}
+
+/* Rastro de huellas que camina hasta las fichas */
+.vc-trail {
+    position: absolute;
+    inset: 0;
+    display: none;
+    pointer-events: none;
+}
+
+@media (min-width: 992px) {
+    .vc-trail {
+        display: block;
+    }
+}
+
+.vc-step {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 22px;
+    height: 22px;
+    color: var(--vc-gold);
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(78deg);
+    animation: vc-paso 6s var(--d) infinite;
+}
+
+.vc-step .vc-paw {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Fichas apiladas */
+.vc-stage {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    width: 100%;
+    max-width: 440px;
+    height: 420px;
+}
+
+.vc-ficha {
+    position: absolute;
+    padding: 1.35rem;
+    background: #fff;
+    color: var(--vc-text);
+    border-radius: 1.1rem;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, .35);
+    animation: vc-sube .8s ease-out both;
+}
+
+.vc-ficha.is-back {
+    top: 0;
+    right: 0;
+    width: 72%;
+    rotate: 6deg;
+    background: #eaf1f9;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+    animation-delay: .1s;
+}
+
+.vc-ficha.is-front {
+    top: 88px;
+    left: 0;
+    width: 84%;
+    rotate: -3deg;
+    animation-delay: .25s;
+}
+
+.vc-ficha-head {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--vc-line);
+}
+
+.vc-ficha-avatar {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--vc-navy);
+    color: var(--vc-gold);
+}
+
+.vc-ficha-avatar.gold {
+    background: var(--vc-gold);
+    color: var(--vc-navy);
+}
+
+.vc-ficha-avatar .vc-paw {
+    width: 26px;
+    height: 26px;
+}
+
+.vc-ficha-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.vc-ficha-meta {
+    color: var(--vc-muted);
+    font-size: .82rem;
+}
+
+.vc-ficha-list {
+    margin: 0;
+    padding: .35rem 0 0;
+    list-style: none;
+}
+
+.vc-ficha-list li {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .7rem 0;
+    font-size: .92rem;
+}
+
+.vc-ficha-list li + li {
+    border-top: 1px dashed var(--vc-line);
+}
+
+.vc-ficha-list i {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: .6rem;
+    background: var(--vc-sky);
+    color: var(--vc-navy);
+}
+
+.vc-ficha-list span {
+    color: var(--vc-muted);
+}
+
+.vc-ficha-list strong {
+    margin-left: auto;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Aviso flotante */
+.vc-toast {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .8rem 1.15rem .8rem .8rem;
+    background: #fff;
+    color: var(--vc-text);
+    border-radius: 1rem;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .3);
+    animation: vc-sube .6s .7s ease-out both, vc-flota 4s 1.3s ease-in-out infinite;
+}
+
+.vc-toast-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--vc-gold-soft);
+    color: #9a7a12;
+}
+
+.vc-toast-icon i {
+    transform-origin: 50% 10%;
+    animation: vc-campana 4s 1.3s ease-in-out infinite;
+}
+
+.vc-toast strong {
+    display: block;
+    font-size: .9rem;
+    line-height: 1.25;
+}
+
+.vc-toast span {
+    display: block;
+    color: var(--vc-muted);
+    font-size: .78rem;
+}
+
+/* Módulos */
+.vc-landing-modules {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .75rem 2.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    color: #c9d6e6;
+    font-size: .95rem;
+    font-weight: 500;
+}
+
+.vc-landing-modules span {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.vc-landing-modules i {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(201, 162, 39, .12);
+    color: var(--vc-gold);
+}
+
+/* Animaciones */
+@keyframes vc-sube {
+    from { opacity: 0; translate: 0 24px; }
+    to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes vc-flota {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -8px; }
+}
+
+@keyframes vc-paso {
+    0% { opacity: 0; scale: .6; }
+    6% { opacity: .4; scale: 1; }
+    50% { opacity: .4; }
+    70%, 100% { opacity: 0; }
+}
+
+@keyframes vc-campana {
+    0%, 14%, 100% { rotate: 0deg; }
+    3% { rotate: 14deg; }
+    7% { rotate: -12deg; }
+    11% { rotate: 6deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vc-landing *,
+    .vc-landing *::before {
+        animation: none !important;
+    }
+
+    .vc-step {
+        opacity: .25;
+    }
+}
+
+/* ---------- Sprint 2: citas, clínica e inventario ---------- */
+.vc-chip.warn {
+    background: #fdf1dc;
+    color: #8a5a00;
+}
+
+.vc-chip.danger {
+    background: #fdecec;
+    color: #b42318;
+}
+
+.vc-nav-count {
+    margin-left: auto;
+    min-width: 1.4rem;
+    padding: .05rem .4rem;
+    border-radius: 999px;
+    background: var(--vc-gold);
+    color: var(--vc-navy);
+    font-size: .7rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--vc-navy);
+    --bs-btn-border-color: #c9d6e6;
+    --bs-btn-hover-color: var(--vc-navy);
+    --bs-btn-hover-bg: var(--vc-sky);
+    --bs-btn-hover-border-color: #c9d6e6;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--vc-navy);
+    --bs-btn-active-border-color: var(--vc-navy);
+    --bs-btn-focus-shadow-rgb: 15, 39, 66;
+}
+
+.vc-toolbar .form-select {
+    width: auto;
+    max-width: 100%;
+}
+
+.vc-daynav {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+.vc-daynav .form-control {
+    width: auto;
+}
+
+/* Agenda del veterinario */
+.vc-agenda-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--vc-line);
+}
+
+.vc-agenda-item:last-child {
+    border-bottom: 0;
+}
+
+.vc-agenda-item.is-off {
+    opacity: .55;
+}
+
+.vc-agenda-hora {
+    width: 3.25rem;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.vc-agenda-hora strong {
+    font-size: 1.05rem;
+}
+
+.vc-agenda-hora span {
+    color: var(--vc-muted);
+    font-size: .78rem;
+}
+
+.vc-agenda-info {
+    flex: 1;
+    min-width: 12rem;
+}
+
+.vc-agenda-acciones {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    margin-left: auto;
+}
+
+/* Fichas, detalle e historial */
+.vc-ficha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem 2rem;
+    padding: 1rem 1.25rem;
+}
+
+.vc-ficha small,
+.vc-label {
+    display: block;
+    margin-bottom: .15rem;
+    color: var(--vc-muted);
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.vc-grid-2 {
+    display: grid;
+    gap: 1rem;
+}
+
+@media (min-width: 992px) {
+    .vc-grid-2 {
+        grid-template-columns: 3fr 2fr;
+        align-items: start;
+    }
+}
+
+.vc-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    padding: .875rem 1.25rem;
+    border-bottom: 1px solid var(--vc-line);
+    font-weight: 700;
+}
+
+.vc-list-item {
+    display: block;
+    padding: .85rem 1.25rem;
+    border-bottom: 1px solid var(--vc-line);
+}
+
+.vc-list-item:last-child {
+    border-bottom: 0;
+}
+
+a.vc-list-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+a.vc-list-link:hover {
+    background: #fafcfe;
+}
+
+.vc-text-block {
+    white-space: pre-line;
+}
+
+/* Alertas de inventario */
+.vc-alert-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    align-items: start;
+}
+
+.vc-alert-icon {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: .6rem;
+    background: var(--vc-sky);
+    color: var(--vc-navy);
+}
+
+.vc-alert-icon.warn {
+    background: #fdf1dc;
+    color: #8a5a00;
+}
+
+.vc-alert-icon.danger {
+    background: #fdecec;
+    color: #b42318;
+}

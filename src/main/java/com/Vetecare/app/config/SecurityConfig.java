@@ -40,9 +40,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/error").permitAll()
+                // "/" es pública: sin sesión muestra la landing, con sesión el panel
+                .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/error").permitAll()
                 .requestMatchers("/usuarios/**", "/h2-console/**").hasRole("ADMIN")
-                .requestMatchers("/propietarios/**", "/mascotas/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
+                .requestMatchers("/propietarios/**", "/mascotas/**", "/citas/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
+                .requestMatchers("/agenda/**", "/consultas/**", "/vacunas/**").hasRole("VETERINARIO")
+                .requestMatchers("/inventario/**").hasRole("AUXILIAR")
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/login")

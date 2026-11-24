@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Consultas')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('consultas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Mis consultas</h1>
+                    <span class="vc-sub" th:text="${#lists.size(consultas) == 1 ? '1 registrada' : #lists.size(consultas) + ' registradas'}">0</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/agenda}"><i class="bi bi-calendar3 me-1"></i>Ir a la agenda</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="table-responsive" th:unless="${#lists.isEmpty(consultas)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Fecha</th><th>Mascota</th><th>Diagnóstico</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="co : ${consultas}">
+                            <td class="text-nowrap" th:text="${#temporals.format(co.cita.fechaHora, 'dd/MM/yyyy')}">01/01/2026</td>
+                            <td>
+                                <div class="fw-semibold" th:text="${co.cita.mascota.nombre}">Mascota</div>
+                                <div class="vc-sub" th:text="${co.cita.mascota.propietario.nombre}">Propietario</div>
+                            </td>
+                            <td th:text="${co.diagnostico}">Diagnóstico</td>
+                            <td>
+                                <div class="vc-actions">
+                                    <a class="vc-icon-btn" th:href="@{/consultas/historial/{id}(id=${co.cita.mascota.id})}" title="Historial" aria-label="Historial"><i class="bi bi-clock-history"></i></a>
+                                    <a class="vc-icon-btn" th:href="@{/consultas/{id}(id=${co.id})}" title="Ver" aria-label="Ver"><i class="bi bi-chevron-right"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(consultas)}"><i class="bi bi-clipboard2-pulse"></i>Aún no has registrado consultas</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

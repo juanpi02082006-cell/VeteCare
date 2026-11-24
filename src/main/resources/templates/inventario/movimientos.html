@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Movimientos')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('movimientos')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Movimientos</h1>
+                    <a th:if="${productoFiltro != null}" class="vc-chip gold" th:href="@{/inventario/movimientos}" title="Quitar filtro">
+                        <span th:text="${productoFiltro.nombre}">Producto</span><i class="bi bi-x-lg"></i>
+                    </a>
+                    <span th:unless="${productoFiltro != null}" class="vc-sub">Últimos 100</span>
+                </div>
+                <a class="btn btn-primary" th:href="${productoFiltro != null} ? @{/inventario/movimientos/nuevo(productoId=${productoFiltro.id})} : @{/inventario/movimientos/nuevo}">
+                    <i class="bi bi-plus-lg me-1"></i>Registrar movimiento</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="table-responsive" th:unless="${#lists.isEmpty(movimientos)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Motivo</th><th>Registró</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="m : ${movimientos}">
+                            <td class="text-nowrap" th:text="${#temporals.format(m.fechaMovimiento, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                            <td class="fw-semibold" th:text="${m.producto.nombre}">Producto</td>
+                            <td class="text-nowrap">
+                                <span th:if="${m.tipo.name() == 'ENTRADA'}" class="vc-chip ok" th:text="|+ ${m.cantidad}|">+1</span>
+                                <span th:if="${m.tipo.name() == 'SALIDA'}" class="vc-chip warn" th:text="|− ${m.cantidad}|">−1</span>
+                            </td>
+                            <td th:text="${m.motivo ?: '—'}">Motivo</td>
+                            <td class="vc-sub" th:text="${m.usuario.nombre}">Usuario</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(movimientos)}"><i class="bi bi-arrow-left-right"></i>Sin movimientos</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

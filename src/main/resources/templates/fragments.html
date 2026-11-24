@@ -8,7 +8,7 @@
     <title th:text="|${titulo} · VetCare Santander|">VetCare Santander</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/vetcare.css}">
@@ -50,22 +50,23 @@
                 <div class="vc-nav-label">Clientes</div>
                 <a class="vc-nav-link" th:classappend="${activo == 'propietarios'} ? 'active'" th:href="@{/propietarios}"><i class="bi bi-people"></i>Propietarios</a>
                 <a class="vc-nav-link" th:classappend="${activo == 'mascotas'} ? 'active'" th:href="@{/mascotas}"><svg th:replace="~{fragments :: huella}"></svg>Mascotas</a>
+                <a class="vc-nav-link" th:classappend="${activo == 'citas'} ? 'active'" th:href="@{/citas}"><i class="bi bi-calendar3"></i>Citas</a>
             </th:block>
-            <span sec:authorize="hasRole('RECEPCIONISTA')" class="vc-nav-link disabled"><i class="bi bi-calendar3"></i>Citas<span class="vc-soon">S2</span></span>
 
             <th:block sec:authorize="hasRole('VETERINARIO')">
                 <div class="vc-nav-label">Clínica</div>
-                <span class="vc-nav-link disabled"><i class="bi bi-calendar3"></i>Mi agenda<span class="vc-soon">S2</span></span>
-                <span class="vc-nav-link disabled"><i class="bi bi-clipboard2-pulse"></i>Consultas<span class="vc-soon">S2</span></span>
-                <span class="vc-nav-link disabled"><i class="bi bi-eyedropper"></i>Vacunas<span class="vc-soon">S2</span></span>
+                <a class="vc-nav-link" th:classappend="${activo == 'agenda'} ? 'active'" th:href="@{/agenda}"><i class="bi bi-calendar3"></i>Mi agenda</a>
+                <a class="vc-nav-link" th:classappend="${activo == 'consultas'} ? 'active'" th:href="@{/consultas}"><i class="bi bi-clipboard2-pulse"></i>Consultas</a>
+                <a class="vc-nav-link" th:classappend="${activo == 'vacunas'} ? 'active'" th:href="@{/vacunas}"><i class="bi bi-eyedropper"></i>Vacunas</a>
                 <span class="vc-nav-link disabled"><i class="bi bi-search"></i>Razas<span class="vc-soon">S3</span></span>
             </th:block>
 
             <th:block sec:authorize="hasRole('AUXILIAR')">
                 <div class="vc-nav-label">Inventario</div>
-                <span class="vc-nav-link disabled"><i class="bi bi-box-seam"></i>Productos<span class="vc-soon">S2</span></span>
-                <span class="vc-nav-link disabled"><i class="bi bi-arrow-left-right"></i>Movimientos<span class="vc-soon">S2</span></span>
-                <span class="vc-nav-link disabled"><i class="bi bi-bell"></i>Alertas<span class="vc-soon">S2</span></span>
+                <a class="vc-nav-link" th:classappend="${activo == 'productos'} ? 'active'" th:href="@{/inventario/productos}"><i class="bi bi-box-seam"></i>Productos</a>
+                <a class="vc-nav-link" th:classappend="${activo == 'movimientos'} ? 'active'" th:href="@{/inventario/movimientos}"><i class="bi bi-arrow-left-right"></i>Movimientos</a>
+                <a class="vc-nav-link" th:classappend="${activo == 'alertas'} ? 'active'" th:href="@{/inventario/alertas}"><i class="bi bi-bell"></i>Alertas
+                    <span class="vc-nav-count" th:if="${alertasInventario != null and alertasInventario > 0}" th:text="${alertasInventario}">0</span></a>
             </th:block>
 
             <th:block sec:authorize="hasRole('PROPIETARIO')">

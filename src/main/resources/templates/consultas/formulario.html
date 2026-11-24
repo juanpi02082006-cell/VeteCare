@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Nueva consulta')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('consultas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/agenda}"><i class="bi bi-arrow-left"></i>Agenda</a>
+                    <h1 th:text="|Consulta de ${consulta.cita.mascota.nombre}|">Nueva consulta</h1>
+                </div>
+                <a class="btn btn-light" th:href="@{/consultas/historial/{id}(id=${consulta.cita.mascota.id})}"><i class="bi bi-clock-history me-1"></i>Historial</a>
+            </div>
+
+            <div class="vc-card vc-form mb-3">
+                <div class="vc-ficha">
+                    <div><small>Mascota</small><span th:text="|${consulta.cita.mascota.especie.etiqueta} · ${consulta.cita.mascota.raza ?: 'Sin raza'}|">Especie</span></div>
+                    <div><small>Propietario</small><span th:text="${consulta.cita.mascota.propietario.nombre}">Propietario</span></div>
+                    <div><small>Cita</small><span th:text="${#temporals.format(consulta.cita.fechaHora, 'dd/MM/yyyy HH:mm')}">Fecha</span></div>
+                    <div><small>Motivo</small><span th:text="${consulta.cita.motivo}">Motivo</span></div>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/consultas/guardar}" th:object="${consulta}" method="post" novalidate>
+                    <input type="hidden" th:field="*{cita.id}">
+
+                    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                        <div th:each="e : ${#fields.globalErrors()}" th:text="${e}">Error</div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="diagnostico">Diagnóstico</label>
+                            <textarea class="form-control" rows="3" th:field="*{diagnostico}" th:errorclass="is-invalid" maxlength="500" autofocus></textarea>
+                            <div class="invalid-feedback" th:errors="*{diagnostico}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="tratamiento">Tratamiento</label>
+                            <textarea class="form-control" rows="3" th:field="*{tratamiento}" th:errorclass="is-invalid" maxlength="500"></textarea>
+                            <div class="invalid-feedback" th:errors="*{tratamiento}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="peso">Peso</label>
+                            <div class="input-group has-validation">
+                                <input class="form-control" type="number" step="0.01" min="0.01" max="150" th:field="*{peso}" th:errorclass="is-invalid">
+                                <span class="input-group-text">kg</span>
+                                <div class="invalid-feedback" th:errors="*{peso}"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label" for="observaciones">Observaciones <span class="vc-sub">(opcional)</span></label>
+                            <input class="form-control" type="text" th:field="*{observaciones}" th:errorclass="is-invalid" maxlength="500">
+                            <div class="invalid-feedback" th:errors="*{observaciones}"></div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/agenda}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar consulta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Producto')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('productos')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/inventario/productos}"><i class="bi bi-arrow-left"></i>Productos</a>
+                    <h1 th:text="${producto.id == null} ? 'Nuevo producto' : 'Editar producto'">Nuevo producto</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/inventario/productos/guardar}" th:object="${producto}" method="post" novalidate>
+                    <input type="hidden" th:field="*{id}">
+                    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                        <div th:each="e : ${#fields.globalErrors()}" th:text="${e}">Error</div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label" for="nombre">Nombre</label>
+                            <input class="form-control" type="text" th:field="*{nombre}" th:errorclass="is-invalid" maxlength="100" autofocus>
+                            <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="categoria">Categoría</label>
+                            <select class="form-select" th:field="*{categoria}" th:errorclass="is-invalid">
+                                <option value="">Selecciona…</option>
+                                <option th:each="c : ${categorias}" th:value="${c}" th:text="${c.etiqueta}">Categoría</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{categoria}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="precio">Precio</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text">$</span>
+                                <input class="form-control" type="number" min="0" step="100" th:field="*{precio}" th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{precio}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Al crear se pide el stock inicial; después solo cambia con movimientos -->
+                        <div class="col-6 col-md-4" th:if="${producto.id == null}">
+                            <label class="form-label" for="stock">Stock inicial</label>
+                            <input class="form-control" type="number" min="0" th:field="*{stock}" th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:errors="*{stock}"></div>
+                        </div>
+                        <div class="col-6 col-md-4" th:unless="${producto.id == null}">
+                            <span class="form-label d-block">Stock actual</span>
+                            <input type="hidden" th:field="*{stock}">
+                            <div class="form-control-plaintext fw-semibold" th:text="*{stock}">0</div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <label class="form-label" for="stockMinimo">Stock mínimo</label>
+                            <input class="form-control" type="number" min="0" th:field="*{stockMinimo}" th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:errors="*{stockMinimo}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="fechaVencimiento">Vence <span class="vc-sub">(opcional)</span></label>
+                            <input class="form-control" type="date" th:field="*{fechaVencimiento}" th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:errors="*{fechaVencimiento}"></div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/inventario/productos}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

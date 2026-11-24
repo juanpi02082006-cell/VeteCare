@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Bienvenida')}"></head>
+<body class="vc-landing">
+
+<header class="vc-landing-bar">
+    <a class="vc-brand" th:href="@{/}">
+        <svg th:replace="~{fragments :: huella}"></svg>
+        <span>VetCare<small>Santander</small></span>
+    </a>
+    <a class="btn btn-outline-light btn-sm px-3" th:href="@{/login}">Ingresar</a>
+</header>
+
+<main class="vc-landing-hero">
+    <!-- Rastro de huellas que camina hasta las fichas (solo en pantallas grandes) -->
+    <div class="vc-trail" aria-hidden="true">
+        <span class="vc-step" style="--x:1%;--y:97%;--d:0s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:7%;--y:90.8%;--d:.4s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:13%;--y:92.6%;--d:.8s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:19%;--y:86.4%;--d:1.2s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:25%;--y:88.2%;--d:1.6s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:31%;--y:82%;--d:2s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:37%;--y:83.8%;--d:2.4s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:43%;--y:77.6%;--d:2.8s"><svg th:replace="~{fragments :: huella}"></svg></span>
+        <span class="vc-step" style="--x:49%;--y:79.4%;--d:3.2s"><svg th:replace="~{fragments :: huella}"></svg></span>
+    </div>
+
+    <div class="vc-landing-copy">
+        <h1>Cada huella,<em>con su historia.</em></h1>
+        <a class="btn btn-gold btn-lg px-4" th:href="@{/login}">Ingresar<i class="bi bi-arrow-right ms-2"></i></a>
+    </div>
+
+    <!-- Fichas de ejemplo: muestran lo que guarda el sistema -->
+    <div class="vc-stage" aria-hidden="true">
+        <div class="vc-ficha is-back">
+            <div class="vc-ficha-head">
+                <div class="vc-ficha-avatar gold"><svg th:replace="~{fragments :: huella}"></svg></div>
+                <div>
+                    <div class="vc-ficha-name">Max</div>
+                    <div class="vc-ficha-meta">Labrador · Macho · 5 años</div>
+                </div>
+            </div>
+            <ul class="vc-ficha-list">
+                <li><i class="bi bi-calendar3"></i><span>Cita</span><strong>Lun 8:30</strong></li>
+                <li><i class="bi bi-heart-pulse"></i><span>Peso</span><strong>31 kg</strong></li>
+            </ul>
+        </div>
+
+        <div class="vc-ficha is-front">
+            <div class="vc-ficha-head">
+                <div class="vc-ficha-avatar"><svg th:replace="~{fragments :: huella}"></svg></div>
+                <div>
+                    <div class="vc-ficha-name">Luna</div>
+                    <div class="vc-ficha-meta">Criolla · Hembra · 3 años</div>
+                </div>
+            </div>
+            <ul class="vc-ficha-list">
+                <li><i class="bi bi-calendar3"></i><span>Cita</span><strong>Vie 10:00</strong></li>
+                <li><i class="bi bi-eyedropper"></i><span>Refuerzo</span><strong class="vc-chip gold">2 dic</strong></li>
+                <li><i class="bi bi-heart-pulse"></i><span>Peso</span><strong>12,4 kg</strong></li>
+            </ul>
+        </div>
+
+        <div class="vc-toast">
+            <div class="vc-toast-icon"><i class="bi bi-bell-fill"></i></div>
+            <div>
+                <strong>Refuerzo mañana</strong>
+                <span>Max · Antirrábica</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="vc-landing-modules">
+    <span><i class="bi bi-calendar3"></i>Citas</span>
+    <span><i class="bi bi-clipboard2-pulse"></i>Consultas</span>
+    <span><i class="bi bi-eyedropper"></i>Vacunas</span>
+    <span><i class="bi bi-box-seam"></i>Inventario</span>
+</footer>
+
+</body>
+</html>

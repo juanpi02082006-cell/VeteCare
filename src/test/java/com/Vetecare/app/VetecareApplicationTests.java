@@ -75,6 +75,15 @@ class VetecareApplicationTests {
             .andExpect(redirectedUrl("/login"));
     }
 
+    // Landing pública
+    @Test
+    void sinSesionLaRaizMuestraLaLanding() throws Exception {
+        mvc.perform(get("/"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("landing"))
+            .andExpect(content().string(containsString("href=\"/login\"")));
+    }
+
     // AC-004
     @Test
     @WithMockUser(roles = "RECEPCIONISTA")

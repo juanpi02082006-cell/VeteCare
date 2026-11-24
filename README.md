@@ -17,7 +17,8 @@ Todas usan la contraseña **`Vetcare2026`** (datos ficticios).
 | Rol | Correo |
 |---|---|
 | Administrador | `admin@vetcare.com` |
-| Veterinario | `veterinario@vetcare.com` |
+| Veterinario | `veterinario@vetcare.com` (Dra. Valentina Ortiz) |
+| Veterinario | `veterinario2@vetcare.com` (Dr. Mateo Rincón) |
 | Recepcionista | `recepcion@vetcare.com` |
 | Auxiliar de inventario | `inventario@vetcare.com` |
 | Propietario | `carlos.ruiz@correo.com` |
@@ -37,12 +38,22 @@ DB_PASSWORD=...
 
 ## Pruebas
 
-`mvnw test`: 10 pruebas de los criterios de aceptación del Sprint 1.
+`mvnw test`: 31 pruebas de los criterios de aceptación de los sprints 1 y 2.
+
+## Datos de demostración
+
+Se cargan solos al arrancar, cada sprint por separado y solo si sus tablas están vacías:
+
+- **Sprint 1:** 5 usuarios, 5 propietarios y 10 mascotas.
+- **Sprint 2:** un segundo veterinario, 12 citas (8 atendidas con consulta, 1 cancelada y 3 programadas, dos de ellas para hoy),
+  10 vacunas con refuerzos vencidos, próximos y al día, y 10 productos (2 con stock crítico, 1 vencido y 1 por vencer).
+
+Para empezar de cero, detener la aplicación y borrar la carpeta `data/`.
 
 ## Documentos SDD
 
 - [Constitución](specs/constitution.md)
 - [Especificación v1.0](specs/spec.md)
 - [Plan técnico](specs/plan.md)
-- [Tareas del Sprint 1 y trazabilidad](specs/tasks.md)
+- [Tareas y trazabilidad de los sprints 1 y 2](specs/tasks.md)
 - [Decisiones de arquitectura](docs/adr/)

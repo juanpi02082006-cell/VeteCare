@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Mi agenda')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('agenda')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Mi agenda</h1>
+                    <span class="vc-sub text-capitalize" th:text="${#temporals.format(fecha, 'EEEE d ''de'' MMMM')}">fecha</span>
+                </div>
+                <form class="vc-daynav" th:action="@{/agenda}" method="get">
+                    <a class="vc-icon-btn" th:href="@{/agenda(fecha=${fecha.minusDays(1)})}" title="Día anterior" aria-label="Día anterior"><i class="bi bi-chevron-left"></i></a>
+                    <input class="form-control" type="date" name="fecha" th:value="${fecha}" onchange="this.form.submit()" aria-label="Fecha">
+                    <a class="vc-icon-btn" th:href="@{/agenda(fecha=${fecha.plusDays(1)})}" title="Día siguiente" aria-label="Día siguiente"><i class="bi bi-chevron-right"></i></a>
+                    <a class="btn btn-light btn-sm" th:href="@{/agenda}">Hoy</a>
+                </form>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="vc-agenda" th:unless="${#lists.isEmpty(citas)}">
+                    <div class="vc-agenda-item" th:each="c : ${citas}" th:classappend="${c.estado.name() == 'CANCELADA'} ? 'is-off'">
+                        <div class="vc-agenda-hora">
+                            <strong th:text="${#temporals.format(c.fechaHora, 'HH:mm')}">09:00</strong>
+                            <span th:text="${#temporals.format(c.fechaFin, 'HH:mm')}">09:30</span>
+                        </div>
+                        <div class="vc-agenda-info">
+                            <div class="fw-semibold" th:text="${c.mascota.nombre}">Mascota</div>
+                            <div class="vc-sub" th:text="|${c.mascota.especie.etiqueta} · ${c.mascota.propietario.nombre} · ${c.motivo}|">Detalle</div>
+                        </div>
+                        <div class="vc-agenda-acciones">
+                            <span class="vc-chip" th:classappend="${c.estado.name() == 'ATENDIDA'} ? 'ok' : (${c.estado.name() == 'CANCELADA'} ? 'off' : '')"
+                                  th:text="${c.estado.etiqueta}">Estado</span>
+                            <a class="vc-icon-btn" th:href="@{/consultas/historial/{id}(id=${c.mascota.id})}" title="Historial" aria-label="Historial"><i class="bi bi-clock-history"></i></a>
+                            <a th:if="${c.programada}" class="btn btn-primary btn-sm" th:href="@{/consultas/nueva(citaId=${c.id})}">Atender</a>
+                            <a th:if="${c.estado.name() == 'ATENDIDA'}" class="btn btn-light btn-sm" th:href="@{/consultas/cita/{id}(id=${c.id})}">Ver consulta</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(citas)}"><i class="bi bi-calendar-check"></i>Sin citas este día</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

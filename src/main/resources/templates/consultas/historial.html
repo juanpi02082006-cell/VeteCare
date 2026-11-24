@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Historial')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('consultas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/agenda}"><i class="bi bi-arrow-left"></i>Agenda</a>
+                    <h1 th:text="${mascota.nombre}">Mascota</h1>
+                    <span class="vc-sub" th:text="|${mascota.especie.etiqueta} · ${mascota.raza ?: 'Sin raza'} · ${mascota.edad ?: 'Edad sin registrar'} · ${mascota.peso != null ? mascota.peso + ' kg' : 'Sin peso'}|">Ficha</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/vacunas/nueva(mascotaId=${mascota.id})}"><i class="bi bi-eyedropper me-1"></i>Registrar vacuna</a>
+            </div>
+
+            <div class="vc-grid-2">
+                <div class="vc-card">
+                    <div class="vc-section-title">Consultas <span class="vc-sub" th:text="${#lists.size(consultas)}">0</span></div>
+                    <a class="vc-list-item vc-list-link" th:each="co : ${consultas}" th:href="@{/consultas/{id}(id=${co.id})}">
+                        <div class="d-flex justify-content-between gap-2">
+                            <span class="fw-semibold" th:text="${co.diagnostico}">Diagnóstico</span>
+                            <span class="vc-sub text-nowrap" th:text="${#temporals.format(co.cita.fechaHora, 'dd/MM/yyyy')}">Fecha</span>
+                        </div>
+                        <div class="vc-sub" th:text="|${co.tratamiento} · ${co.cita.veterinario.nombre}|">Tratamiento</div>
+                    </a>
+                    <div class="vc-empty py-4" th:if="${#lists.isEmpty(consultas)}"><i class="bi bi-clipboard2"></i>Sin consultas</div>
+                </div>
+
+                <div class="vc-card">
+                    <div class="vc-section-title">Vacunas <span class="vc-sub" th:text="${#lists.size(vacunas)}">0</span></div>
+                    <div class="vc-list-item" th:each="v : ${vacunas}">
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <span class="fw-semibold" th:text="${v.nombre}">Vacuna</span>
+                            <span th:replace="~{vacunas/lista :: estado(${v}, ${reforzadas})}"></span>
+                        </div>
+                        <div class="vc-sub" th:text="|Aplicada ${#temporals.format(v.fechaAplicacion, 'dd/MM/yyyy')} · refuerzo ${#temporals.format(v.fechaRefuerzo, 'dd/MM/yyyy')}|">Fechas</div>
+                    </div>
+                    <div class="vc-empty py-4" th:if="${#lists.isEmpty(vacunas)}"><i class="bi bi-eyedropper"></i>Sin vacunas</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

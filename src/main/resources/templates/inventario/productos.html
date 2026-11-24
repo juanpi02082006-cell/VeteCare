@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Productos')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('productos')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Productos</h1>
+                    <span class="vc-sub" th:text="${#lists.size(productos) == 1 ? '1 producto' : #lists.size(productos) + ' productos'}">0</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/inventario/productos/nuevo}"><i class="bi bi-plus-lg me-1"></i>Nuevo producto</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <div class="vc-toolbar">
+                    <form class="vc-search" th:action="@{/inventario/productos}" method="get" role="search">
+                        <i class="bi bi-search"></i>
+                        <input class="form-control" type="search" name="q" th:value="${q}" placeholder="Buscar producto" aria-label="Buscar producto">
+                    </form>
+                    <a th:if="${q != null}" class="btn btn-light btn-sm" th:href="@{/inventario/productos}">Ver todos</a>
+                </div>
+
+                <div class="table-responsive" th:unless="${#lists.isEmpty(productos)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Vence</th><th>Estado</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${productos}">
+                            <td>
+                                <div class="fw-semibold" th:text="${p.nombre}">Producto</div>
+                                <div class="vc-sub" th:text="${p.categoria.etiqueta}">Categoría</div>
+                            </td>
+                            <td class="text-nowrap" th:text="|$ ${#numbers.formatInteger(p.precio, 1, 'POINT')}|">$ 0</td>
+                            <td class="text-nowrap">
+                                <span class="fw-semibold" th:text="${p.stock}">0</span>
+                                <span class="vc-sub" th:text="|/ mín. ${p.stockMinimo}|">/ mín. 0</span>
+                            </td>
+                            <td class="text-nowrap" th:text="${p.fechaVencimiento != null} ? ${#temporals.format(p.fechaVencimiento, 'dd/MM/yyyy')} : '—'">—</td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <span th:if="${p.estaCritico()}" class="vc-chip warn">Crítico</span>
+                                    <span th:if="${p.estaVencido()}" class="vc-chip danger">Vencido</span>
+                                    <span th:if="${p.estaPorVencer()}" class="vc-chip warn">Por vencer</span>
+                                    <span th:if="${!p.estaCritico() and !p.estaVencido() and !p.estaPorVencer()}" class="vc-chip ok">OK</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="vc-actions">
+                                    <a class="vc-icon-btn" th:href="@{/inventario/movimientos/nuevo(productoId=${p.id},tipo='ENTRADA')}" title="Registrar entrada" aria-label="Registrar entrada"><i class="bi bi-box-arrow-in-down"></i></a>
+                                    <a class="vc-icon-btn" th:href="@{/inventario/movimientos/nuevo(productoId=${p.id},tipo='SALIDA')}" title="Registrar salida" aria-label="Registrar salida"><i class="bi bi-box-arrow-up"></i></a>
+                                    <a class="vc-icon-btn" th:href="@{/inventario/movimientos(productoId=${p.id})}" title="Movimientos" aria-label="Movimientos"><i class="bi bi-clock-history"></i></a>
+                                    <a class="vc-icon-btn" th:href="@{/inventario/productos/{id}/editar(id=${p.id})}" title="Editar" aria-label="Editar"><i class="bi bi-pencil"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(productos)}"><i class="bi bi-box-seam"></i>Sin resultados</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

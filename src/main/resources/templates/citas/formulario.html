@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Cita')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('citas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <a class="vc-back" th:href="@{/citas}"><i class="bi bi-arrow-left"></i>Citas</a>
+                    <h1 th:text="${cita.id == null} ? 'Nueva cita' : 'Modificar cita'">Nueva cita</h1>
+                </div>
+            </div>
+
+            <div class="vc-card vc-form">
+                <form class="vc-card-body" th:action="@{/citas/guardar}" th:object="${cita}" method="post" novalidate>
+                    <input type="hidden" th:field="*{id}">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="mascota.id">Mascota</label>
+                            <select class="form-select" th:field="*{mascota.id}" th:classappend="${#fields.hasErrors('mascota')} ? 'is-invalid'">
+                                <option value="">Selecciona…</option>
+                                <option th:each="m : ${mascotas}" th:value="${m.id}" th:text="|${m.nombre} · ${m.propietario.nombre}|">Mascota</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{mascota}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="veterinario.id">Veterinario</label>
+                            <select class="form-select" th:field="*{veterinario.id}" th:classappend="${#fields.hasErrors('veterinario')} ? 'is-invalid'">
+                                <option value="">Selecciona…</option>
+                                <option th:each="v : ${veterinarios}" th:value="${v.id}" th:text="${v.nombre}">Veterinario</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{veterinario}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="fechaHora">Fecha y hora <span class="vc-sub">(30 min)</span></label>
+                            <input class="form-control" type="datetime-local" th:field="*{fechaHora}" th:errorclass="is-invalid"
+                                   th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}">
+                            <div class="invalid-feedback" th:errors="*{fechaHora}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="motivo">Motivo</label>
+                            <input class="form-control" type="text" th:field="*{motivo}" th:errorclass="is-invalid" maxlength="200">
+                            <div class="invalid-feedback" th:errors="*{motivo}"></div>
+                        </div>
+                    </div>
+                    <div class="vc-form-actions">
+                        <a class="btn btn-light" th:href="@{/citas}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

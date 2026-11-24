@@ -22,6 +22,10 @@
 
                 <!-- Administrador y recepcionista -->
                 <th:block sec:authorize="hasAnyRole('ADMIN','RECEPCIONISTA')">
+                    <a class="vc-tile" th:href="@{/citas}">
+                        <span class="vc-tile-icon"><i class="bi bi-calendar3"></i></span>
+                        <div><div class="vc-tile-num" th:text="${citasHoy}">0</div><div class="vc-tile-label">Citas programadas hoy</div></div>
+                    </a>
                     <a class="vc-tile" th:href="@{/propietarios}">
                         <span class="vc-tile-icon"><i class="bi bi-people"></i></span>
                         <div><div class="vc-tile-num" th:text="${totalPropietarios}">0</div><div class="vc-tile-label">Propietarios</div></div>
@@ -36,41 +40,37 @@
                     <span class="vc-tile-icon"><i class="bi bi-bar-chart-line"></i></span>
                     <div><span class="vc-chip off">Sprint 3</span><div class="vc-tile-label mt-2">Tablero SSD</div></div>
                 </span>
-                <span sec:authorize="hasRole('RECEPCIONISTA')" class="vc-tile disabled">
-                    <span class="vc-tile-icon"><i class="bi bi-calendar3"></i></span>
-                    <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Citas</div></div>
-                </span>
 
                 <!-- Veterinario -->
                 <th:block sec:authorize="hasRole('VETERINARIO')">
-                    <span class="vc-tile disabled">
+                    <a class="vc-tile" th:href="@{/agenda}">
                         <span class="vc-tile-icon"><i class="bi bi-calendar3"></i></span>
-                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Mi agenda</div></div>
-                    </span>
-                    <span class="vc-tile disabled">
+                        <div><div class="vc-tile-num" th:text="${misCitasHoy ?: 0}">0</div><div class="vc-tile-label">Citas pendientes hoy</div></div>
+                    </a>
+                    <a class="vc-tile" th:href="@{/consultas}">
                         <span class="vc-tile-icon"><i class="bi bi-clipboard2-pulse"></i></span>
-                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Consultas</div></div>
-                    </span>
-                    <span class="vc-tile disabled">
+                        <div><div class="vc-tile-num" th:text="${misConsultas ?: 0}">0</div><div class="vc-tile-label">Consultas registradas</div></div>
+                    </a>
+                    <a class="vc-tile" th:href="@{/vacunas(pendientes=true)}">
                         <span class="vc-tile-icon"><i class="bi bi-eyedropper"></i></span>
-                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Vacunas</div></div>
-                    </span>
+                        <div><div class="vc-tile-num" th:text="${vacunasPendientes}">0</div><div class="vc-tile-label">Refuerzos pendientes</div></div>
+                    </a>
                 </th:block>
 
                 <!-- Auxiliar de inventario -->
                 <th:block sec:authorize="hasRole('AUXILIAR')">
-                    <span class="vc-tile disabled">
-                        <span class="vc-tile-icon"><i class="bi bi-box-seam"></i></span>
-                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Productos</div></div>
-                    </span>
-                    <span class="vc-tile disabled">
-                        <span class="vc-tile-icon"><i class="bi bi-arrow-left-right"></i></span>
-                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Movimientos</div></div>
-                    </span>
-                    <span class="vc-tile disabled">
+                    <a class="vc-tile" th:href="@{/inventario/alertas}">
                         <span class="vc-tile-icon"><i class="bi bi-bell"></i></span>
-                        <div><span class="vc-chip off">Sprint 2</span><div class="vc-tile-label mt-2">Alertas</div></div>
-                    </span>
+                        <div><div class="vc-tile-num" th:text="${alertasInventario ?: 0}">0</div><div class="vc-tile-label">Productos con alerta</div></div>
+                    </a>
+                    <a class="vc-tile" th:href="@{/inventario/productos}">
+                        <span class="vc-tile-icon"><i class="bi bi-box-seam"></i></span>
+                        <div><div class="vc-tile-num" th:text="${totalProductos}">0</div><div class="vc-tile-label">Productos</div></div>
+                    </a>
+                    <a class="vc-tile" th:href="@{/inventario/movimientos/nuevo}">
+                        <span class="vc-tile-icon"><i class="bi bi-arrow-left-right"></i></span>
+                        <div><div class="vc-tile-num"><i class="bi bi-plus-lg"></i></div><div class="vc-tile-label">Registrar movimiento</div></div>
+                    </a>
                 </th:block>
 
                 <!-- Propietario -->

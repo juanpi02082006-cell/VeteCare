@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Citas')}"></head>
+<body>
+<div class="vc-app">
+    <aside th:replace="~{fragments :: menu('citas')}"></aside>
+    <main class="vc-main">
+        <header th:replace="~{fragments :: topbar}"></header>
+        <div class="vc-content">
+            <div class="vc-page-head">
+                <div>
+                    <h1>Citas</h1>
+                    <span class="vc-sub text-capitalize" th:text="${#temporals.format(fecha, 'EEEE d ''de'' MMMM ''de'' yyyy')}">fecha</span>
+                </div>
+                <a class="btn btn-primary" th:href="@{/citas/nueva}"><i class="bi bi-plus-lg me-1"></i>Nueva cita</a>
+            </div>
+
+            <div th:replace="~{fragments :: alertas}"></div>
+
+            <div class="vc-card">
+                <form class="vc-toolbar" th:action="@{/citas}" method="get">
+                    <div class="vc-daynav">
+                        <a class="vc-icon-btn" th:href="@{/citas(fecha=${fecha.minusDays(1)},veterinarioId=${veterinarioId},estado=${estadoFiltro})}" title="Día anterior" aria-label="Día anterior"><i class="bi bi-chevron-left"></i></a>
+                        <input class="form-control" type="date" name="fecha" th:value="${fecha}" onchange="this.form.submit()" aria-label="Fecha">
+                        <a class="vc-icon-btn" th:href="@{/citas(fecha=${fecha.plusDays(1)},veterinarioId=${veterinarioId},estado=${estadoFiltro})}" title="Día siguiente" aria-label="Día siguiente"><i class="bi bi-chevron-right"></i></a>
+                    </div>
+                    <select class="form-select" name="veterinarioId" onchange="this.form.submit()" aria-label="Veterinario">
+                        <option value="">Todos los veterinarios</option>
+                        <option th:each="v : ${veterinarios}" th:value="${v.id}" th:text="${v.nombre}" th:selected="${v.id == veterinarioId}">Veterinario</option>
+                    </select>
+                    <select class="form-select" name="estado" onchange="this.form.submit()" aria-label="Estado">
+                        <option value="">Todos los estados</option>
+                        <option th:each="e : ${estados}" th:value="${e}" th:text="${e.etiqueta}" th:selected="${e == estadoFiltro}">Estado</option>
+                    </select>
+                    <a class="btn btn-light btn-sm" th:href="@{/citas}">Hoy</a>
+                </form>
+
+                <div class="table-responsive" th:unless="${#lists.isEmpty(citas)}">
+                    <table class="table vc-table">
+                        <thead>
+                        <tr><th>Hora</th><th>Mascota</th><th>Veterinario</th><th>Motivo</th><th>Estado</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c : ${citas}" th:classappend="${c.estado.name() == 'CANCELADA'} ? 'text-body-tertiary'">
+                            <td class="fw-semibold text-nowrap" th:text="${#temporals.format(c.fechaHora, 'HH:mm')}">09:00</td>
+                            <td>
+                                <div class="fw-semibold" th:text="${c.mascota.nombre}">Mascota</div>
+                                <div class="vc-sub" th:text="${c.mascota.propietario.nombre}">Propietario</div>
+                            </td>
+                            <td th:text="${c.veterinario.nombre}">Veterinario</td>
+                            <td th:text="${c.motivo}">Motivo</td>
+                            <td>
+                                <span class="vc-chip" th:classappend="${c.estado.name() == 'ATENDIDA'} ? 'ok' : (${c.estado.name() == 'CANCELADA'} ? 'off' : '')"
+                                      th:text="${c.estado.etiqueta}">Estado</span>
+                            </td>
+                            <td>
+                                <div class="vc-actions" th:if="${c.programada}">
+                                    <a class="vc-icon-btn" th:href="@{/citas/{id}/editar(id=${c.id})}" title="Modificar" aria-label="Modificar"><i class="bi bi-pencil"></i></a>
+                                    <form th:action="@{/citas/{id}/cancelar(id=${c.id})}" method="post" onsubmit="return confirm('¿Cancelar esta cita?');">
+                                        <button type="submit" class="vc-icon-btn danger" title="Cancelar cita" aria-label="Cancelar cita"><i class="bi bi-x-circle"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="vc-empty" th:if="${#lists.isEmpty(citas)}"><i class="bi bi-calendar3"></i>Sin citas este día</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>
